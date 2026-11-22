@@ -14,6 +14,8 @@ export const SEEDED_SCENARIOS: Record<string, ScenarioDefinition> = {
       dominantPollutant: 'PM2.5',
       category: 'Severe',
       categoryColor: '#7f1d1d',
+      trend: 'worsening',
+      trendDescription: 'Radiation cooling deepening ground boundary inversion; soot accumulation increasing.',
       pollutants: {
         pm25: 298.5,
         pm10: 462.0,
@@ -32,6 +34,7 @@ export const SEEDED_SCENARIOS: Record<string, ScenarioDefinition> = {
         lastUpdated: '15 mins ago (08:30 IST)',
         freshness: 'DEMO_SCENARIO',
         isRealTime: false,
+        measurementType: 'SIMULATED_SCENARIO',
         rawStationSource: 'DPCC Continuous Ambient Air Quality Monitoring Station (CAAQMS)'
       },
       scale: 'CPCB_INDIA',
@@ -83,6 +86,8 @@ export const SEEDED_SCENARIOS: Record<string, ScenarioDefinition> = {
       dominantPollutant: 'PM2.5',
       category: 'Moderate',
       categoryColor: '#d97706',
+      trend: 'stable',
+      trendDescription: 'Stable coastal sea-breeze holding particulate concentrations near 188.',
       pollutants: {
         pm25: 96.2,
         pm10: 168.0,
@@ -101,6 +106,7 @@ export const SEEDED_SCENARIOS: Record<string, ScenarioDefinition> = {
         lastUpdated: '10 mins ago (08:45 IST)',
         freshness: 'DEMO_SCENARIO',
         isRealTime: false,
+        measurementType: 'SIMULATED_SCENARIO',
         rawStationSource: 'Maharashtra Pollution Control Board (MPCB)'
       },
       scale: 'CPCB_INDIA',
@@ -147,6 +153,8 @@ export const SEEDED_SCENARIOS: Record<string, ScenarioDefinition> = {
       dominantPollutant: 'PM10',
       category: 'Satisfactory',
       categoryColor: '#65a30d',
+      trend: 'improving',
+      trendDescription: 'Active surface wind dispersal clearing airborne particulates across the plateau.',
       pollutants: {
         pm25: 18.4,
         pm10: 52.0,
@@ -165,6 +173,7 @@ export const SEEDED_SCENARIOS: Record<string, ScenarioDefinition> = {
         lastUpdated: '5 mins ago (08:50 IST)',
         freshness: 'DEMO_SCENARIO',
         isRealTime: false,
+        measurementType: 'SIMULATED_SCENARIO',
         rawStationSource: 'Karnataka State Pollution Control Board'
       },
       scale: 'CPCB_INDIA',

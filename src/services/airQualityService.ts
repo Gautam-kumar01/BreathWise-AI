@@ -103,11 +103,25 @@ export class AirQualityService {
       const isSevere = cpcb.aqi > 300;
       const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+      // Trend analysis based on next hours
+      const nextVal = hourlyData[1]?.aqi ?? cpcb.aqi;
+      let trend: 'improving' | 'worsening' | 'stable' = 'stable';
+      let trendDescription = 'Particulate levels expected to remain steady over the next 2-3 hours.';
+      if (nextVal > cpcb.aqi + 15) {
+        trend = 'worsening';
+        trendDescription = 'Pollution concentrations expected to rise as evening cold inversion strengthens.';
+      } else if (nextVal < cpcb.aqi - 15) {
+        trend = 'improving';
+        trendDescription = 'Conditions clearing due to solar radiation and increased boundary atmospheric mixing.';
+      }
+
       return {
         aqi: cpcb.aqi,
         dominantPollutant: 'PM2.5',
         category: cpcb.category,
         categoryColor: meta.color,
+        trend,
+        trendDescription,
         pollutants: { pm25, pm10, no2, so2, o3, co },
         metadata: {
           stationName: `Real-Time Ground Station (${lat.toFixed(2)}°N, ${lon.toFixed(2)}°E)`,
@@ -119,6 +133,7 @@ export class AirQualityService {
           lastUpdated: `Live at ${nowStr} IST`,
           freshness: 'LIVE_FRESH',
           isRealTime: true,
+          measurementType: 'MODEL_ASSIMILATION',
           apiUrlUsed: aqiUrl,
           rawStationSource: 'European Centre for Medium-Range Weather Forecasts (ECMWF) & Ground Grid'
         },

@@ -1,11 +1,15 @@
 export type PlanTimeSlot = 
-  | 'Morning (6 AM - 9 AM)' 
-  | 'Morning Commute (9 AM - 10 AM)' 
-  | 'Midday & Indoors (11 AM - 4 PM)' 
-  | 'Evening Commute (5 PM - 8 PM)' 
-  | 'Night Rest (8 PM - 6 AM)';
+  | 'Morning Routine (6:00 AM - 7:30 AM)'
+  | 'Outdoor Exercise (7:30 AM - 9:00 AM)' 
+  | 'School & Office Commute (9:00 AM - 10:30 AM)' 
+  | 'Midday & Solar Window (1:00 PM - 3:30 PM)' 
+  | 'Evening Commute (5:00 PM - 7:30 PM)' 
+  | 'Night Rest (8:00 PM - 10:30 PM)'
+  | "Tomorrow's Smog Prep (10:30 PM)";
 
-export type PlanCategory = 'exercise' | 'commute' | 'indoor' | 'lifestyle' | 'community';
+export type PlanCategory = 'exercise' | 'commute' | 'indoor' | 'lifestyle' | 'community' | 'custom';
+
+export type ActionStatus = 'pending' | 'completed' | 'skipped' | 'rescheduled';
 
 export interface ProvenanceDetails {
   environmentalTrigger: string;    // e.g. "PM2.5 spike to 285 µg/m³ during ground inversion"
@@ -18,16 +22,21 @@ export interface ProvenanceDetails {
 
 export interface RecommendationCard {
   id: string;
-  timeSlot: PlanTimeSlot;
-  category: PlanCategory;
+  slot?: 'morning' | 'commute' | 'midday' | 'evening' | 'prep';
+  timeSlot: string;
+  category?: PlanCategory;
   title: string;
   actionText: string;
   urgency: 'critical' | 'recommended' | 'optional';
   provenance: ProvenanceDetails;
-  isCompleted: boolean;
-  isSnoozed: boolean;
-  tags: string[];
+  status?: ActionStatus;
+  rescheduledTime?: string;
+  skipReason?: string;
+  isCustomTask?: boolean;
+  tags?: string[];
 }
+
+export type RecommendationItem = RecommendationCard;
 
 export interface DailyAirPlan {
   id: string;

@@ -7,6 +7,7 @@ import { DashboardView } from './components/dashboard/DashboardView';
 import { PlanView } from './components/plan/PlanView';
 import { IndoorView } from './components/indoor/IndoorView';
 import { CommuteView } from './components/commute/CommuteView';
+import { ImpactView } from './components/impact/ImpactView';
 import { CommunityView } from './components/community/CommunityView';
 import { AssistantView } from './components/assistant/AssistantView';
 import { ShieldCheck, HeartHandshake } from 'lucide-react';
@@ -24,6 +25,8 @@ export const App: React.FC = () => {
         return <IndoorView />;
       case 'commute':
         return <CommuteView />;
+      case 'impact':
+        return <ImpactView />;
       case 'community':
         return <CommunityView />;
       case 'assistant':

@@ -52,6 +52,7 @@ export interface AirStationMetadata {
   lastUpdated: string;
   freshness: FreshnessStatus;
   isRealTime: boolean;
+  measurementType: 'GROUND_OBSERVATION' | 'MODEL_ASSIMILATION' | 'SIMULATED_SCENARIO';
   apiUrlUsed?: string;
   rawStationSource?: string;
 }
@@ -61,6 +62,8 @@ export interface AirQualitySnapshot {
   dominantPollutant: 'PM2.5' | 'PM10' | 'NO2' | 'O3';
   category: AQICategory;
   categoryColor: string;
+  trend: 'improving' | 'worsening' | 'stable';
+  trendDescription: string;
   pollutants: PollutantValues;
   metadata: AirStationMetadata;
   scale: AQIScale;

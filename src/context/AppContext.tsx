@@ -1,11 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AirQualitySnapshot, ScenarioDefinition, AQIScale } from '../types/air';
 import { UserPreferences, Language, SavedPlace } from '../types/user';
+import { RecommendationCard } from '../types/plan';
+import { IndoorSensorLog, RoomType } from '../types/indoor';
+import { OverallImpactSummary } from '../types/impact';
 import { SEEDED_SCENARIOS } from '../data/scenarios';
 import { AirQualityService } from '../services/airQualityService';
 import { getCPCBFromPM25, getUSEPAFromPM25, getAQIMeta } from '../utils/aqiUtils';
 
-export type NavigationTab = 'dashboard' | 'plan' | 'indoor' | 'commute' | 'community' | 'assistant';
+export type NavigationTab = 
+  | 'dashboard' 
+  | 'plan' 
+  | 'indoor' 
+  | 'commute' 
+  | 'impact' 
+  | 'community' 
+  | 'assistant';
 
 export interface CityPreset {
   name: string;
@@ -42,7 +52,7 @@ interface AppContextType {
   toggleActionCompletion: (actionId: string) => void;
   toggleLanguage: () => void;
   language: Language;
-  refreshAirData: () => Promise<void>;
+  refreshAirData: (lat?: number, lon?: number) => Promise<void>;
   isProfileDrawerOpen: boolean;
   setIsProfileDrawerOpen: (open: boolean) => void;
   aqiScale: AQIScale;
@@ -51,6 +61,27 @@ interface AppContextType {
   selectCity: (city: CityPreset) => void;
   useLiveLocation: () => Promise<void>;
   searchCityGeocode: (query: string) => Promise<CityPreset[]>;
+  
+  // Schedule Management
+  customTasks: RecommendationCard[];
+  addCustomTask: (task: Omit<RecommendationCard, 'id' | 'status'>) => void;
+  rescheduleTask: (taskId: string, newTimeSlot: string) => void;
+  skipTask: (taskId: string, reason?: string) => void;
+  restoreTask: (taskId: string) => void;
+  rescheduledMap: Record<string, string>;
+  skippedIds: string[];
+
+  // Indoor Sensor Logging
+  sensorLogs: IndoorSensorLog[];
+  addSensorLog: (log: { room: RoomType; pm25: number; co2Ppm?: number; deviceModel: string; note?: string }) => void;
+  removeSensorLog: (id: string) => void;
+
+  // Impact Data
+  impactSummary: OverallImpactSummary;
+  incrementSustainableTrip: () => void;
+  incrementSustainableTrips: () => void;
+  incrementCombinedTrips: () => void;
+  resetImpactTracker: () => void;
 }
 
 const DEFAULT_PREFERENCES: UserPreferences = {
@@ -67,10 +98,35 @@ const DEFAULT_PREFERENCES: UserPreferences = {
     { id: 'p2', label: 'Office (Connaught Place)', city: 'Delhi', lat: 28.6304, lon: 77.2177 },
     { id: 'p3', label: 'Kids School (Noida Sec 62)', city: 'Noida', lat: 28.6280, lon: 77.3649 }
   ],
-  completedActionIds: [],
+  completedActionIds: ['rec-2'], // 1 pre-completed for realistic initial state
   snoozedActionIds: [],
   language: 'en'
 };
+
+const DEFAULT_SENSOR_LOGS: IndoorSensorLog[] = [
+  {
+    id: 'slog-1',
+    room: 'bedroom',
+    pm25: 48,
+    co2Ppm: 820,
+    deviceModel: 'IKEA VINDSTYRKA Laser Monitor',
+    recordedAt: 'Today, 07:45 AM',
+    isUserEntered: true,
+    note: 'Windows kept shut overnight with damp towel sealing.',
+    interpretation: 'Satisfactory. Infiltration held below 50 µg/m³ while outdoor was >300 µg/m³.'
+  },
+  {
+    id: 'slog-2',
+    room: 'kitchen',
+    pm25: 142,
+    co2Ppm: 1100,
+    deviceModel: 'DIY Sensirion SPS30 Sensor',
+    recordedAt: 'Yesterday, 08:30 PM',
+    isUserEntered: true,
+    note: 'Measured during tadka oil frying without chimney.',
+    interpretation: 'Elevated peak. Recommending running exhaust 2 minutes before cooking flame.'
+  }
+];
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -83,23 +139,76 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [aqiScale, setAqiScaleState] = useState<AQIScale>('CPCB_INDIA');
   const [selectedCity, setSelectedCity] = useState<CityPreset>(INDIAN_CITIES[0]);
 
+  // Schedule Customization State
+  const [customTasks, setCustomTasks] = useState<RecommendationCard[]>(() => {
+    try {
+      const s = localStorage.getItem('breathewise_custom_tasks');
+      if (s) return JSON.parse(s);
+    } catch {}
+    return [];
+  });
+
+  const [rescheduledMap, setRescheduledMap] = useState<Record<string, string>>(() => {
+    try {
+      const s = localStorage.getItem('breathewise_rescheduled_map');
+      if (s) return JSON.parse(s);
+    } catch {}
+    return {};
+  });
+
+  const [skippedIds, setSkippedIds] = useState<string[]>(() => {
+    try {
+      const s = localStorage.getItem('breathewise_skipped_ids');
+      if (s) return JSON.parse(s);
+    } catch {}
+    return [];
+  });
+
+  // Indoor Sensor Logs State
+  const [sensorLogs, setSensorLogs] = useState<IndoorSensorLog[]>(() => {
+    try {
+      const s = localStorage.getItem('breathewise_sensor_logs');
+      if (s) return JSON.parse(s);
+    } catch {}
+    return DEFAULT_SENSOR_LOGS;
+  });
+
+  // Sustainable Trips counter
+  const [sustainableTripsCount, setSustainableTripsCount] = useState<number>(() => {
+    try {
+      const s = localStorage.getItem('breathewise_sustainable_trips');
+      if (s) return Number(s);
+    } catch {}
+    return 4;
+  });
+
+  const [combinedTripsCount, setCombinedTripsCount] = useState<number>(() => {
+    try {
+      const s = localStorage.getItem('breathewise_combined_trips');
+      if (s) return Number(s);
+    } catch {}
+    return 2;
+  });
+
   const [userPreferences, setUserPreferences] = useState<UserPreferences>(() => {
     try {
       const saved = localStorage.getItem('breathewise_preferences');
       if (saved) return JSON.parse(saved);
-    } catch {
-      // ignore
-    }
+    } catch {}
     return DEFAULT_PREFERENCES;
   });
 
   useEffect(() => {
     try {
       localStorage.setItem('breathewise_preferences', JSON.stringify(userPreferences));
-    } catch {
-      // ignore
-    }
-  }, [userPreferences]);
+      localStorage.setItem('breathewise_custom_tasks', JSON.stringify(customTasks));
+      localStorage.setItem('breathewise_rescheduled_map', JSON.stringify(rescheduledMap));
+      localStorage.setItem('breathewise_skipped_ids', JSON.stringify(skippedIds));
+      localStorage.setItem('breathewise_sensor_logs', JSON.stringify(sensorLogs));
+      localStorage.setItem('breathewise_sustainable_trips', String(sustainableTripsCount));
+      localStorage.setItem('breathewise_combined_trips', String(combinedTripsCount));
+    } catch {}
+  }, [userPreferences, customTasks, rescheduledMap, skippedIds, sensorLogs, sustainableTripsCount, combinedTripsCount]);
 
   const recalculateScale = (baseData: AirQualitySnapshot, scale: AQIScale): AirQualitySnapshot => {
     const pm25 = baseData.pollutants.pm25;
@@ -216,6 +325,119 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
   };
 
+  // Schedule Customization Actions
+  const addCustomTask = (task: Omit<RecommendationCard, 'id' | 'status'>) => {
+    const id = `custom-${Date.now()}`;
+    const newTask: RecommendationCard = {
+      ...task,
+      id,
+      status: 'pending',
+      isCustomTask: true
+    };
+    setCustomTasks(prev => [newTask, ...prev]);
+  };
+
+  const rescheduleTask = (taskId: string, newTimeSlot: string) => {
+    setRescheduledMap(prev => ({ ...prev, [taskId]: newTimeSlot }));
+    // If it was skipped, unskip
+    setSkippedIds(prev => prev.filter(id => id !== taskId));
+  };
+
+  const skipTask = (taskId: string) => {
+    setSkippedIds(prev => [...new Set([...prev, taskId])]);
+    // Remove from completed if it was
+    setUserPreferences(prev => ({
+      ...prev,
+      completedActionIds: prev.completedActionIds.filter(id => id !== taskId)
+    }));
+  };
+
+  const restoreTask = (taskId: string) => {
+    setSkippedIds(prev => prev.filter(id => id !== taskId));
+    setRescheduledMap(prev => {
+      const copy = { ...prev };
+      delete copy[taskId];
+      return copy;
+    });
+  };
+
+  // Sensor Log Actions
+  const addSensorLog = (log: { room: RoomType; pm25: number; co2Ppm?: number; deviceModel: string; note?: string }) => {
+    const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let interp = 'Safe indoor reading.';
+    if (log.pm25 > 100) interp = 'High indoor particulate ingress. Verify window seals and run exhaust.';
+    else if (log.pm25 > 50) interp = 'Moderate reading. Maintain damp mopping and avoid indoor combustion.';
+
+    const newLog: IndoorSensorLog = {
+      id: `slog-${Date.now()}`,
+      room: log.room,
+      pm25: log.pm25,
+      co2Ppm: log.co2Ppm,
+      deviceModel: log.deviceModel || 'User Air Monitor',
+      recordedAt: `Today, ${nowStr}`,
+      isUserEntered: true,
+      note: log.note,
+      interpretation: interp
+    };
+    setSensorLogs(prev => [newLog, ...prev]);
+  };
+
+  const removeSensorLog = (id: string) => {
+    setSensorLogs(prev => prev.filter(l => l.id !== id));
+  };
+
+  const incrementSustainableTrip = () => {
+    setSustainableTripsCount(prev => prev + 1);
+  };
+
+  const incrementCombinedTrips = () => {
+    setCombinedTripsCount(prev => prev + 1);
+  };
+
+  const resetImpactTracker = () => {
+    setSustainableTripsCount(0);
+    setCombinedTripsCount(0);
+  };
+
+  // Compute Overall Impact Summary
+  const completedCount = userPreferences.completedActionIds.length;
+  const morningPeaksAvoided = completedCount >= 1 ? 2 : 0;
+  const estimatedCarTripsAvoided = Math.max(0, sustainableTripsCount - 1);
+  // 12km commute avoiding solo car (0.18 kg CO2e/km) vs metro (0.03 kg/km) = ~1.8 kg CO2e per trip
+  const estimatedCo2eSavedKg = Number((estimatedCarTripsAvoided * 1.8).toFixed(1));
+
+  const impactSummary: OverallImpactSummary = {
+    exposure: {
+      actionsCompletedCount: completedCount,
+      morningPeaksAvoided,
+      maskUsageLogged: 3,
+      strenuousCardioShiftedCount: 2
+    },
+    indoor: {
+      sourceControlActionsCount: 4,
+      microVentilationWindowsFollowed: 3,
+      filterCleaningsLogged: 1,
+      manualSensorLogsCount: sensorLogs.length
+    },
+    transport: {
+      sustainableTripsCount,
+      combinedErrandsCount: combinedTripsCount,
+      estimatedCarTripsAvoided,
+      estimatedCo2eSavedKg,
+      methodologyNote: 'Calculated using IPCC/CPCB urban transit emission factors: Solo petrol car ~0.18 kg CO2e/km vs Metro AC ~0.03 kg CO2e/km over typical 12km trip.'
+    },
+    weeklyStreakDays: Math.min(7, 3 + (sustainableTripsCount > 0 ? 1 : 0) + (completedCount > 0 ? 1 : 0)),
+    weeklyHabits: [
+      { dayLabel: 'Mon', dateStr: '18 Nov', actionsCount: 3, isToday: false, isGoalMet: true },
+      { dayLabel: 'Tue', dateStr: '19 Nov', actionsCount: 4, isToday: false, isGoalMet: true },
+      { dayLabel: 'Wed', dateStr: '20 Nov', actionsCount: 2, isToday: false, isGoalMet: false },
+      { dayLabel: 'Thu', dateStr: '21 Nov', actionsCount: 5, isToday: false, isGoalMet: true },
+      { dayLabel: 'Fri', dateStr: '22 Nov', actionsCount: completedCount, isToday: true, isGoalMet: completedCount >= 1 },
+      { dayLabel: 'Sat', dateStr: '23 Nov', actionsCount: 0, isToday: false, isGoalMet: false },
+      { dayLabel: 'Sun', dateStr: '24 Nov', actionsCount: 0, isToday: false, isGoalMet: false }
+    ]
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -239,7 +461,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         selectedCity,
         selectCity,
         useLiveLocation,
-        searchCityGeocode
+        searchCityGeocode,
+
+        // Schedule Actions
+        customTasks,
+        addCustomTask,
+        rescheduleTask,
+        skipTask,
+        restoreTask,
+        rescheduledMap,
+        skippedIds,
+
+        // Sensor Logs
+        sensorLogs,
+        addSensorLog,
+        removeSensorLog,
+
+        // Impact
+        impactSummary,
+        incrementSustainableTrip,
+        incrementSustainableTrips: incrementSustainableTrip,
+        incrementCombinedTrips,
+        resetImpactTracker
       }}
     >
       {children}
