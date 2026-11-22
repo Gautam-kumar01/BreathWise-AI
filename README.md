@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BreatheWise AI — Urban Air Quality Assistant
 > **A location-aware, GenAI-powered companion for safer routines, cleaner indoor spaces, and lower-impact daily choices.**  
 > *Developed for PromptWars 5 • Challenge 6: Urban Air Quality Assistant*
@@ -172,3 +173,7 @@ pnpm run build
 - **Event:** PromptWars 5 — Challenge 6 (Urban Air Quality Assistant)
 - **Project Name:** BreatheWise AI
 - **License:** MIT License
+=======
+# BreathWise-AI
+BreatheWise AI: Urban Air Quality &amp; Respiratory Protection Assistant  BreatheWise AI is a responsive, location-aware environmental health companion designed to help urban families, commuters, and communities navigate severe winter smog and urban air pollution.
+>>>>>>> b149e7d6244434095b719833453cd4c94d7f0ccd
