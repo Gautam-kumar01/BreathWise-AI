@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#faf8f5] text-stone-900 font-sans;
+  }
+}
+
+/* Custom warm scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f5f0e8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6c6b2;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ba9465;
+}
+
+/* Warm card styling */
+.warm-card {
+  background: #ffffff;
+  border: 1px solid #eee7dd;
+  box-shadow: 0 2px 8px -2px rgba(94, 65, 40, 0.05), 0 1px 3px 0 rgba(94, 65, 40, 0.03);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.warm-card-hover:hover {
+  border-color: #dfcdb1;
+  box-shadow: 0 10px 20px -4px rgba(94, 65, 40, 0.08), 0 4px 6px -2px rgba(94, 65, 40, 0.04);
+  transform: translateY(-1px);
+}
