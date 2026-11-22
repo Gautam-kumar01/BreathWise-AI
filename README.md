@@ -92,45 +92,6 @@ In response to research showing that bright red/blue emergency alert dashboards 
   - [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api) (Global city search)
 - **Deployment:** Vercel SPA (`vercel.json` configured)
 
----
-
-## 📦 How to Deploy on Vercel
-
-BreatheWise AI is configured for zero-configuration, instant deployment on **Vercel**.
-
-### Method 1: Deploy via GitHub (Recommended)
-1. Push this repository to your GitHub account:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit of BreatheWise AI"
-   git branch -M main
-   git remote add origin https://github.com/<your-username>/breathewise-ai.git
-   git push -u origin main
-   ```
-2. Go to [vercel.com](https://vercel.com) and log in.
-3. Click **"Add New..."** → **"Project"**.
-4. Select your `breathewise-ai` repository and click **Import**.
-5. Vercel will automatically detect:
-   - **Framework Preset:** Vite
-   - **Root Directory:** `./`
-   - **Build Command:** `vite build`
-   - **Output Directory:** `dist`
-6. Click **Deploy**. Your live production URL will be ready in under 60 seconds!
-
-### Method 2: Deploy via Vercel CLI
-If you have Node.js and the Vercel CLI installed:
-```bash
-# 1. Install Vercel CLI globally (if not already installed)
-npm install -g vercel
-
-# 2. Run deploy command from the project root
-vercel
-
-# Follow the terminal prompts (defaults are pre-configured in vercel.json)
-```
-
----
 
 ## 💻 Local Development Setup
 
