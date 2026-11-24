@@ -67,7 +67,7 @@ export const DiurnalCurveSection: React.FC<DiurnalCurveSectionProps> = ({
   const gridLevels = [50, 100, 200, 300, 400].filter(lvl => lvl <= maxScale);
 
   return (
-    <div className="rounded-3xl bg-white border border-warm-200 p-6 shadow-warm-sm space-y-5">
+    <div className="rounded-3xl bg-white border border-warm-200 p-4 sm:p-6 shadow-warm-sm space-y-4 sm:space-y-5">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-warm-100">
         <div>

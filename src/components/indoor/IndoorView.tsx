@@ -96,7 +96,7 @@ export const IndoorView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-warm-sm">
@@ -121,7 +121,7 @@ export const IndoorView: React.FC = () => {
       </div>
 
       {/* Dynamic Ventilation Decision Matrix Banner */}
-      <div className={`p-6 rounded-3xl border shadow-warm-md transition-all ${
+      <div className={`p-4 sm:p-6 rounded-3xl border shadow-warm-md transition-all ${
         isSafeToVentilate
           ? 'bg-gradient-to-r from-amber-50 via-lime-50/50 to-stone-50 border-amber-300'
           : 'bg-gradient-to-r from-orange-50 via-amber-50 to-warm-100 border-orange-300'
@@ -159,7 +159,7 @@ export const IndoorView: React.FC = () => {
       </div>
 
       {/* User-Reported Sensor Readings Section */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
         <div className="flex items-center justify-between pb-3 border-b border-warm-200">
           <div className="flex items-center gap-2">
             <Activity className="w-4 h-4 text-orange-700" />
@@ -227,7 +227,7 @@ export const IndoorView: React.FC = () => {
       </div>
 
       {/* Interactive Micro-Physics Simulator */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
         <div className="flex items-center justify-between pb-3 border-b border-warm-200 mb-4">
           <div className="flex items-center gap-2">
             <Gauge className="w-4 h-4 text-orange-700" />
@@ -415,7 +415,7 @@ export const IndoorView: React.FC = () => {
       </div>
 
       {/* Air Purifier & Filter Maintenance Guide */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
         <div className="flex items-center gap-2 pb-3 border-b border-warm-200 mb-4">
           <Wrench className="w-4 h-4 text-orange-700" />
           <h3 className="text-sm font-bold text-stone-900 font-serif">

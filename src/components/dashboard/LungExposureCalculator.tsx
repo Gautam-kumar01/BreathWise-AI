@@ -63,7 +63,7 @@ export const LungExposureCalculator: React.FC = () => {
   const strain = getStrainCategory();
 
   return (
-    <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md">
+    <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-warm-200 mb-5">
         <div>

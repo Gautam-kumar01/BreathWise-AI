@@ -5,7 +5,7 @@ export const ParticleSizeExplainer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'particles' | 'inversion'>('particles');
 
   return (
-    <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+    <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
       {/* Header and Toggle */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-warm-200 mb-5">
         <div>

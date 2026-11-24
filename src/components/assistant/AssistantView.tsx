@@ -166,7 +166,7 @@ export const AssistantView: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-4">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex items-center justify-between">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-warm-sm">

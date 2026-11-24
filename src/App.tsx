@@ -38,14 +38,14 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#faf8f5] text-stone-900 selection:bg-amber-500/20 selection:text-amber-900">
-      {/* Navbar with Provenance Banner & Search */}
-      <Navbar />
-
-      {/* Primary Navigation Tabs */}
-      <NavigationTabs />
+      {/* Unified Sticky Header: Status Banner + Main Navbar + Navigation Tabs */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-warm-200 shadow-warm-xs">
+        <Navbar />
+        <NavigationTabs />
+      </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
         {renderActiveTab()}
       </main>
 

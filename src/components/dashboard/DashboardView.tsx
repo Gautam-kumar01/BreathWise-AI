@@ -142,7 +142,7 @@ export const DashboardView: React.FC = () => {
       <AudioBriefing />
 
       {/* Hero Air Quality Card with Semicircular Radial Gauge */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-white border border-warm-200 p-6 sm:p-8 shadow-warm-lg">
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-50/80 via-orange-50/40 to-white border border-warm-200 p-4 sm:p-8 shadow-warm-lg">
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left: Interactive Radial Gauge & Big AQI Display */}
@@ -325,8 +325,93 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
+      {/* 3-Second Plain-English Action Summary: Answers "What does this mean for me right now?" */}
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-orange-500/10 via-amber-500/10 to-warm-50 border border-orange-200/90 shadow-warm-sm">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2.5 pb-3 border-b border-orange-200/70">
+          <div className="flex items-center gap-2">
+            <span className="w-7 h-7 rounded-xl bg-orange-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
+              ⚡
+            </span>
+            <h3 className="text-sm sm:text-base font-extrabold text-stone-900 font-serif">
+              In Plain Words: What This Air Reading Means For You Right Now
+            </h3>
+          </div>
+
+          <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-white border border-orange-300 text-orange-950 uppercase tracking-wider shadow-2xs">
+            {airData.metadata.city} • {airData.category}
+          </span>
+        </div>
+
+        {/* 3 Clear Action Guidance Bullets */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3 mt-3 text-xs">
+          <div className="p-3.5 rounded-2xl bg-white/95 border border-warm-200 shadow-2xs">
+            <span className="font-extrabold text-stone-900 block mb-1 flex items-center gap-1.5 text-xs">
+              🏃 Outdoor Exercise & Movement
+            </span>
+            <p className="text-stone-600 leading-relaxed text-[11px]">
+              {airData.aqi > 250
+                ? 'Cancel outdoor jogging or park walks. Heavy breathing forces 6x more fine soot deep into lung alveoli. Perform indoor yoga or bodyweight circuits.'
+                : 'Light to moderate outdoor movement is suitable. Avoid high-traffic road corridors during early morning hours.'}
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white/95 border border-warm-200 shadow-2xs">
+            <span className="font-extrabold text-stone-900 block mb-1 flex items-center gap-1.5 text-xs">
+              🪟 Windows & Home Ventilation
+            </span>
+            <p className="text-stone-600 leading-relaxed text-[11px]">
+              {airData.dailyForecastSummary.ventilationSafeNow
+                ? `Permitted for a 20-minute solar air flush right now (${airData.dailyForecastSummary.cleanestWindow}) to purge stale indoor CO2.`
+                : `Keep exterior windows tightly shut right now. Open only during the midday solar clearing window (${airData.dailyForecastSummary.cleanestWindow}).`}
+            </p>
+          </div>
+
+          <div className="p-3.5 rounded-2xl bg-white/95 border border-warm-200 shadow-2xs">
+            <span className="font-extrabold text-stone-900 block mb-1 flex items-center gap-1.5 text-xs">
+              🚗 Commuting & Travel
+            </span>
+            <p className="text-stone-600 leading-relaxed text-[11px]">
+              {airData.aqi > 250
+                ? 'Prefer Delhi Metro (filtered coaches) or cabin with AC Recirculation. Open two-wheelers and autos receive direct unfiltered exhaust plumes.'
+                : 'Public transit and carpooling recommended. Wear helmet visor or light mask along busy road corridors.'}
+            </p>
+          </div>
+        </div>
+
+        {/* 3 Quick Action Shortcuts to Guide User Directly into Features */}
+        <div className="mt-3.5 pt-3 border-t border-orange-200/60 flex flex-wrap items-center justify-between gap-2">
+          <span className="text-[11px] text-stone-600 font-medium">
+            Next steps tailored for you:
+          </span>
+
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <button
+              onClick={() => setActiveTab('plan')}
+              className="px-3 py-1.5 rounded-xl bg-orange-700 hover:bg-orange-800 text-white text-xs font-semibold shadow-warm-xs transition flex items-center gap-1"
+            >
+              <span>📅 View 7-Hour Smog Plan</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+
+            <button
+              onClick={() => setActiveTab('indoor')}
+              className="px-3 py-1.5 rounded-xl bg-white hover:bg-warm-100 border border-warm-200 text-stone-800 text-xs font-semibold shadow-2xs transition"
+            >
+              <span>🏠 ₹0 Indoor Hacks</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('assistant')}
+              className="px-3 py-1.5 rounded-xl bg-white hover:bg-warm-100 border border-warm-200 text-stone-800 text-xs font-semibold shadow-2xs transition"
+            >
+              <span>💬 Ask AI Copilot</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* "Can I Do This Right Now?" Quick Activity Verdicts Matrix */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
           <div>
             <h3 className="text-base font-bold text-stone-900 font-serif">
@@ -338,7 +423,7 @@ export const DashboardView: React.FC = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 sm:gap-3">
           {[
             {
               title: 'Outdoor Running',

@@ -42,7 +42,7 @@ export const CommuteView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-warm-sm">
@@ -193,7 +193,7 @@ export const CommuteView: React.FC = () => {
       </div>
 
       {/* Deep-Dive Active Mode Analysis */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
         <h3 className="text-base font-bold text-stone-900 font-serif mb-2">
           Recommended Smog Strategy for: <span className="text-orange-700">{selectedMode.name}</span> ({origin} → {destination})
         </h3>

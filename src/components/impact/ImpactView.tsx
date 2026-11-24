@@ -55,7 +55,7 @@ export const ImpactView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white shadow-warm-sm">
@@ -195,7 +195,7 @@ export const ImpactView: React.FC = () => {
       </div>
 
       {/* 7-Day Weekly Habit & Smog Resilience Streak */}
-      <div className="p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-white border border-warm-200 shadow-warm-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-warm-200">
           <div>
             <div className="flex items-center gap-2">
@@ -253,7 +253,7 @@ export const ImpactView: React.FC = () => {
       </div>
 
       {/* Quick Logging Action Bar */}
-      <div className="p-6 rounded-3xl bg-gradient-to-r from-amber-50/70 via-warm-50 to-orange-50/70 border border-warm-200 shadow-warm-sm">
+      <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-amber-50/70 via-warm-50 to-orange-50/70 border border-warm-200 shadow-warm-sm">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="w-4 h-4 text-orange-700" />
           <h3 className="text-sm font-bold text-stone-900 font-serif">
