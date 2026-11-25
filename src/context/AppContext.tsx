@@ -286,15 +286,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+interface GeocodingApiResponse {
+  results?: Array<{
+    name: string;
+    admin1?: string;
+    country?: string;
+    latitude: number;
+    longitude: number;
+  }>;
+}
+
   const searchCityGeocode = async (query: string): Promise<CityPreset[]> => {
     if (!query.trim()) return [];
     try {
       const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=6&language=en&format=json`;
       const res = await fetch(url);
       if (!res.ok) return [];
-      const json = await res.json();
+      const json: GeocodingApiResponse = await res.json();
       if (!json.results) return [];
-      return json.results.map((r: any) => ({
+      return json.results.map((r) => ({
         name: r.name,
         state: [r.admin1, r.country].filter(Boolean).join(', '),
         lat: Number(r.latitude),

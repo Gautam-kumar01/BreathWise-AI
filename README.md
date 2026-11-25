@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # BreatheWise AI — Urban Air Quality Assistant
 > **A location-aware, GenAI-powered companion for safer routines, cleaner indoor spaces, and lower-impact daily choices.**  
 > *Developed for PromptWars 5 • Challenge 6: Urban Air Quality Assistant*
@@ -6,6 +5,7 @@
 [![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![React](https://img.shields.io/badge/React-18.3-61DAFB?logo=react&logoColor=black)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vitest](https://img.shields.io/badge/Tests-40%20Passing%20(100%25)-success?logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Open-Meteo](https://img.shields.io/badge/Data-Open--Meteo%20Copernicus%20CAMS-FF6B6B)](https://open-meteo.com/)
 [![Vercel](https://img.shields.io/badge/Deploy-Vercel%20Ready-000000?logo=vercel&logoColor=white)](https://vercel.com/)
@@ -122,6 +122,28 @@ pnpm run build
 
 ---
 
+## 🧪 Comprehensive Automated Testing & Verification
+
+BreatheWise AI includes a strict Vitest test suite covering unit calculations, atmospheric models, environmental impact metrics, and component interactions with **100% pass rate (40/40 tests)**:
+
+```bash
+# Run the complete test suite
+pnpm test
+
+# Run tests in interactive watch mode
+pnpm test:watch
+```
+
+### Test Suite Structure:
+- `src/__tests__/aqiUtils.test.ts`: Validates Indian CPCB NAQI breakpoints (0–500), US EPA breakpoints, dual-standard conversions, and bilingual (Hindi/English) health implications.
+- `src/__tests__/airQualityService.test.ts`: Verifies real-time API assimilation, scenario loading (`delhi_severe`, `mumbai_coastal`, `bengaluru_clear`), diurnal inversion curve generation, and solar clearing window detection.
+- `src/__tests__/commute.test.ts`: Validates 5 multimodal urban transport profiles, inhaled particulate dose scales (1–10), and emission factors per passenger-kilometer.
+- `src/__tests__/indoorDefense.test.ts`: Verifies all 5 architectural rooms (`bedroom`, `living`, `kitchen`, `study`, `classroom`), essential source control rules, and sensor log data integrity.
+- `src/__tests__/impactTracker.test.ts`: Validates 3-pillar tracking (Personal Exposure, Indoor Air Defense, Sustainable Commute CO2e avoided) and 7-day habit streaks.
+- `src/__tests__/components.test.tsx`: Validates component rendering, ARIA accessibility, navigation tab switching, SVG diurnal scrubber rendering, and biological soot explainer cards.
+
+---
+
 ## 🛡️ Responsible AI & Safety Disclaimers
 
 1. **Non-Medical Boundary:** BreatheWise AI provides environmental and routine decision support only. It does not provide clinical diagnoses, prescribe treatments, or replace pulmonologists.
@@ -134,7 +156,3 @@ pnpm run build
 - **Event:** PromptWars 5 — Challenge 6 (Urban Air Quality Assistant)
 - **Project Name:** BreatheWise AI
 - **License:** MIT License
-=======
-# BreathWise-AI
-BreatheWise AI: Urban Air Quality &amp; Respiratory Protection Assistant  BreatheWise AI is a responsive, location-aware environmental health companion designed to help urban families, commuters, and communities navigate severe winter smog and urban air pollution.
->>>>>>> b149e7d6244434095b719833453cd4c94d7f0ccd

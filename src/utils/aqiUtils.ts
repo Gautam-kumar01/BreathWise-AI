@@ -70,6 +70,14 @@ export function getUSEPAFromPM25(pm25: number): { aqi: number; category: AQICate
   }
 }
 
+/**
+ * Resolves comprehensive metadata, color codes, English and Hindi health advisories
+ * for a given numerical AQI value based on the chosen standard (CPCB India or US EPA).
+ * 
+ * @param aqi - Numerical Air Quality Index value (0 - 500+)
+ * @param scale - AQI calculation scale standard ('CPCB_INDIA' or 'US_EPA')
+ * @returns AQIBreakdown containing visual tokens, bilingual labels, and health cautions
+ */
 export function getAQIMeta(aqi: number, scale: AQIScale = 'CPCB_INDIA'): AQIBreakdown {
   if (scale === 'US_EPA') {
     if (aqi <= 50) {
