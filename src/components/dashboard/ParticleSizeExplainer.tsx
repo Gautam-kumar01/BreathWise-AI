@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Layers, Wind, AlertCircle, ShieldCheck, ArrowDown, ArrowUp } from 'lucide-react';
+import React, { useState, memo } from 'react';
+import { Layers, ArrowDown, ArrowUp } from 'lucide-react';
 
-export const ParticleSizeExplainer: React.FC = () => {
+export const ParticleSizeExplainer: React.FC = memo(() => {
   const [activeTab, setActiveTab] = useState<'particles' | 'inversion'>('particles');
 
   return (
@@ -137,4 +137,4 @@ export const ParticleSizeExplainer: React.FC = () => {
       )}
     </div>
   );
-};
+});

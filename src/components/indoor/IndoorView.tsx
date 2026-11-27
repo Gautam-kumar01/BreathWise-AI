@@ -6,20 +6,12 @@ import { RoomType, IndoorSensorLog } from '../../types/indoor';
 import { 
   Home, 
   Wind, 
-  ShieldAlert, 
   Check, 
-  Sparkles, 
   Gauge, 
-  Flame, 
-  DoorClosed, 
-  Eye, 
-  HelpCircle,
   PlusCircle,
   Activity,
   Trash2,
   Wrench,
-  BookOpen,
-  CheckCircle2,
   AlertTriangle
 } from 'lucide-react';
 
@@ -75,12 +67,6 @@ export const IndoorView: React.FC = () => {
 
   const handleAddSensorLog = (e: React.FormEvent) => {
     e.preventDefault();
-    const interpretation = sensorPm25 <= 30
-      ? 'Clean indoor air (Below WHO guideline)'
-      : sensorPm25 <= 60
-      ? 'Moderate indoor air (Acceptable, check CO2)'
-      : 'High indoor particle loading (Source active or infiltration)';
-
     addSensorLog({
       room: sensorRoom,
       pm25: Number(sensorPm25),

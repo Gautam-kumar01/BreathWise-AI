@@ -8,7 +8,6 @@ import {
   Home,
   CheckCircle2,
   Calendar,
-  Info,
   Car,
   Footprints,
   RotateCcw,
@@ -16,15 +15,13 @@ import {
   Award,
   BookOpen,
   ArrowRight,
-  Flame,
   Wind
 } from 'lucide-react';
 
 export const ImpactView: React.FC = () => {
-  const { impactSummary, incrementSustainableTrips, incrementCombinedTrips, resetImpactTracker, language, airData } = useApp();
+  const { impactSummary, incrementSustainableTrips, incrementCombinedTrips, resetImpactTracker, language } = useApp();
   const { showToast } = useToast();
   const [showMethodologyModal, setShowMethodologyModal] = useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<'all' | 'exposure' | 'indoor' | 'transport'>('all');
   const isHi = language === 'hi';
 
   const handleLogCombinedTrip = () => {

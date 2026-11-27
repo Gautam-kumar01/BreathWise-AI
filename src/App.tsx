@@ -1,16 +1,43 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { useApp } from './context/AppContext';
 import { Navbar } from './components/layout/Navbar';
 import { NavigationTabs } from './components/layout/NavigationTabs';
 import { ProfileDrawer } from './components/common/ProfileDrawer';
-import { DashboardView } from './components/dashboard/DashboardView';
-import { PlanView } from './components/plan/PlanView';
-import { IndoorView } from './components/indoor/IndoorView';
-import { CommuteView } from './components/commute/CommuteView';
-import { ImpactView } from './components/impact/ImpactView';
-import { CommunityView } from './components/community/CommunityView';
-import { AssistantView } from './components/assistant/AssistantView';
 import { ShieldCheck, HeartHandshake } from 'lucide-react';
+
+// Code-split heavy tab views so initial bundle only loads the active route
+const DashboardView = lazy(() =>
+  import('./components/dashboard/DashboardView').then(m => ({ default: m.DashboardView }))
+);
+const PlanView = lazy(() =>
+  import('./components/plan/PlanView').then(m => ({ default: m.PlanView }))
+);
+const IndoorView = lazy(() =>
+  import('./components/indoor/IndoorView').then(m => ({ default: m.IndoorView }))
+);
+const CommuteView = lazy(() =>
+  import('./components/commute/CommuteView').then(m => ({ default: m.CommuteView }))
+);
+const ImpactView = lazy(() =>
+  import('./components/impact/ImpactView').then(m => ({ default: m.ImpactView }))
+);
+const CommunityView = lazy(() =>
+  import('./components/community/CommunityView').then(m => ({ default: m.CommunityView }))
+);
+const AssistantView = lazy(() =>
+  import('./components/assistant/AssistantView').then(m => ({ default: m.AssistantView }))
+);
+
+const ViewLoadingSkeleton: React.FC = () => (
+  <div className="space-y-6 animate-pulse" role="status" aria-label="Loading view">
+    <div className="h-44 rounded-3xl bg-warm-200/60 border border-warm-200" />
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="h-32 rounded-2xl bg-warm-100 border border-warm-200" />
+      <div className="h-32 rounded-2xl bg-warm-100 border border-warm-200" />
+      <div className="h-32 rounded-2xl bg-warm-100 border border-warm-200" />
+    </div>
+  </div>
+);
 
 export const App: React.FC = () => {
   const { activeTab } = useApp();
@@ -46,7 +73,9 @@ export const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
-        {renderActiveTab()}
+        <Suspense fallback={<ViewLoadingSkeleton />}>
+          {renderActiveTab()}
+        </Suspense>
       </main>
 
       {/* Profile & Context Drawer */}

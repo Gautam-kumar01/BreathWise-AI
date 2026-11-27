@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useApp, INDIAN_CITIES } from '../../context/AppContext';
 import { 
   Wind, 
@@ -10,7 +10,6 @@ import {
   ShieldCheck, 
   ChevronDown, 
   Navigation,
-  Sparkles,
   Search,
   Loader2,
   X
@@ -40,24 +39,37 @@ export const Navbar: React.FC = () => {
   const [citySearchQuery, setCitySearchQuery] = useState('');
   const [liveSearchResults, setLiveSearchResults] = useState<typeof INDIAN_CITIES>([]);
   const [isSearchingCity, setIsSearchingCity] = useState(false);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isDemo = activeScenarioId !== 'live';
   const isHi = language === 'hi';
 
-  const handleCitySearch = async (val: string) => {
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+    };
+  }, []);
+
+  const handleCitySearch = (val: string) => {
     setCitySearchQuery(val);
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+
     if (!val.trim()) {
       setLiveSearchResults([]);
+      setIsSearchingCity(false);
       return;
     }
+
     setIsSearchingCity(true);
-    try {
-      const results = await searchCityGeocode(val);
-      setLiveSearchResults(results);
-    } catch {
-      setLiveSearchResults([]);
-    } finally {
-      setIsSearchingCity(false);
-    }
+    searchTimeoutRef.current = setTimeout(async () => {
+      try {
+        const results = await searchCityGeocode(val);
+        setLiveSearchResults(results);
+      } catch {
+        setLiveSearchResults([]);
+      } finally {
+        setIsSearchingCity(false);
+      }
+    }, 300);
   };
 
   return (

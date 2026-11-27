@@ -1,18 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { useApp } from '../../context/AppContext';
-import { 
-  HeartPulse, 
-  Activity, 
-  ShieldAlert, 
-  ShieldCheck, 
-  Sparkles, 
-  Clock, 
-  ArrowRight,
-  Cigarette,
-  AlertTriangle
-} from 'lucide-react';
+import { HeartPulse, Cigarette } from 'lucide-react';
 
-export const LungExposureCalculator: React.FC = () => {
+export const LungExposureCalculator: React.FC = memo(() => {
   const { airData } = useApp();
 
   const [activity, setActivity] = useState<'running' | 'commute_bike' | 'walking' | 'metro'>('running');
@@ -208,4 +198,4 @@ export const LungExposureCalculator: React.FC = () => {
       </div>
     </div>
   );
-};
+});

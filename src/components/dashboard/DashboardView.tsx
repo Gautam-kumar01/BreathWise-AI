@@ -10,17 +10,13 @@ import {
   Sun, 
   Moon, 
   ArrowRight, 
-  TrendingDown, 
   Info, 
-  Clock, 
   ShieldCheck, 
   Wind, 
   Droplets, 
   Thermometer, 
   Compass, 
-  AlertTriangle,
   RefreshCw,
-  Sparkles,
   Baby,
   Users2,
   HeartPulse,
@@ -35,13 +31,10 @@ export const DashboardView: React.FC = () => {
     airData, 
     setActiveTab, 
     language, 
-    availableScenarios, 
-    selectScenario, 
     activeScenarioId, 
     aqiScale, 
     refreshAirData, 
-    isLoadingAir,
-    selectedCity
+    isLoadingAir
   } = useApp();
 
   const meta = getAQIMeta(airData.aqi, aqiScale);
@@ -52,9 +45,6 @@ export const DashboardView: React.FC = () => {
   const [selectedHourIdx, setSelectedHourIdx] = useState<number>(0);
   const [vulnerableGroup, setVulnerableGroup] = useState<'general' | 'kids' | 'seniors' | 'asthma'>('general');
   const [showDataModal, setShowDataModal] = useState<boolean>(false);
-
-  // Selected hour point
-  const currentHourPoint = airData.hourlyCurve[selectedHourIdx] || airData.hourlyCurve[0];
 
   // Radial Gauge Calculations
   const aqiClamped = Math.min(500, Math.max(0, airData.aqi));
@@ -461,7 +451,6 @@ export const DashboardView: React.FC = () => {
               desc: 'Never pull outside air when driving behind diesel trucks'
             }
           ].map((act, i) => {
-            const Icon = act.icon;
             return (
               <div
                 key={i}

@@ -2,21 +2,73 @@ import { AirQualitySnapshot, DiurnalPoint, WeatherMetrics } from '../types/air';
 import { SEEDED_SCENARIOS } from '../data/scenarios';
 import { getAQIMeta, getCPCBFromPM25 } from '../utils/aqiUtils';
 
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const FETCH_TIMEOUT_MS = 8000;
+
+interface CacheEntry {
+  snapshot: AirQualitySnapshot;
+  timestamp: number;
+}
+
 export class AirQualityService {
+  private static cache = new Map<string, CacheEntry>();
+  private static pendingRequests = new Map<string, Promise<AirQualitySnapshot>>();
+
+  /**
+   * Clears cached live air quality responses (used when user manually requests a refresh).
+   */
+  static clearCache(): void {
+    this.cache.clear();
+  }
+
   /**
    * Fetches real-time air quality and meteorological data.
-   * Uses Open-Meteo Air Quality & Weather API (Copernicus CAMS assimilation).
-   * 100% public, non-commercial, zero API key required!
+   * Uses Open-Meteo Air Quality & Weather API (Copernicus CAMS assimilation)
+   * with in-memory TTL caching, request deduplication, and AbortController timeout.
+   * 100% public, non-commercial, zero API key required.
    */
   static async getAirQuality(
     scenarioId: string = 'delhi_severe',
     lat: number = 28.6139,
-    lon: number = 77.2090
+    lon: number = 77.2090,
+    forceRefresh: boolean = false
   ): Promise<AirQualitySnapshot> {
     // If user explicitly selected a seeded demo scenario
     if (scenarioId !== 'live' && SEEDED_SCENARIOS[scenarioId]) {
       return SEEDED_SCENARIOS[scenarioId].data;
     }
+
+    const cacheKey = `${lat.toFixed(2)},${lon.toFixed(2)}`;
+    if (!forceRefresh) {
+      const cached = this.cache.get(cacheKey);
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+        return cached.snapshot;
+      }
+      const pending = this.pendingRequests.get(cacheKey);
+      if (pending) {
+        return pending;
+      }
+    }
+
+    const requestPromise = this.fetchLiveSnapshot(lat, lon).then((snapshot) => {
+      this.cache.set(cacheKey, { snapshot, timestamp: Date.now() });
+      this.pendingRequests.delete(cacheKey);
+      return snapshot;
+    }).catch((err) => {
+      this.pendingRequests.delete(cacheKey);
+      throw err;
+    });
+
+    this.pendingRequests.set(cacheKey, requestPromise);
+    return requestPromise;
+  }
+
+  private static async fetchLiveSnapshot(
+    lat: number,
+    lon: number
+  ): Promise<AirQualitySnapshot> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
     try {
       // 1. Fetch Live Air Quality
@@ -25,9 +77,10 @@ export class AirQualityService {
       const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,wind_direction_10m&timezone=auto`;
 
       const [aqiRes, weatherRes] = await Promise.all([
-        fetch(aqiUrl),
-        fetch(weatherUrl)
+        fetch(aqiUrl, { signal: controller.signal }),
+        fetch(weatherUrl, { signal: controller.signal })
       ]);
+      clearTimeout(timeoutId);
 
       if (!aqiRes.ok) throw new Error(`Air Quality API error: ${aqiRes.status}`);
       const aqiJson = await aqiRes.json();
@@ -161,6 +214,7 @@ export class AirQualityService {
         }
       };
     } catch (err) {
+      clearTimeout(timeoutId);
       console.warn('Real-time API fetch failed or offline; falling back to seeded scenario', err);
       return SEEDED_SCENARIOS.delhi_severe.data;
     }

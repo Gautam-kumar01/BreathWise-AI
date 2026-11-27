@@ -7,16 +7,9 @@ import {
   Leaf, 
   DollarSign, 
   Clock, 
-  ShieldCheck, 
   Check, 
-  Train, 
-  Car, 
-  Bike, 
-  Footprints, 
   MapPin, 
-  Info,
-  CheckCircle2,
-  AlertCircle
+  Info
 } from 'lucide-react';
 
 export const CommuteView: React.FC = () => {

@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { 
-  MessageSquare, 
   Send, 
   Sparkles, 
   ShieldCheck, 
-  User, 
-  Info, 
-  HelpCircle,
   AlertCircle,
   ChevronDown,
   ChevronUp,

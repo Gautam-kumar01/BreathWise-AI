@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { useToast } from '../../context/ToastContext';
-import { RecommendationItem, ActionStatus } from '../../types/plan';
+import { RecommendationItem } from '../../types/plan';
 import { 
   CalendarClock, 
   CheckCircle2, 
@@ -9,15 +9,8 @@ import {
   ChevronDown, 
   ChevronUp, 
   AlertCircle, 
-  Sparkles,
-  Filter,
   PlusCircle,
-  XCircle,
-  RotateCcw,
-  CalendarDays,
-  ShieldCheck,
-  FileEdit,
-  ArrowRight
+  RotateCcw
 } from 'lucide-react';
 
 export const PlanView: React.FC = () => {

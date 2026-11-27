@@ -1,17 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { DiurnalPoint, AQIScale } from '../../types/air';
 import { getAQIMeta } from '../../utils/aqiUtils';
 import { 
   Sun, 
   Moon, 
-  Clock, 
-  TrendingDown, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Wind, 
-  Thermometer,
-  ShieldAlert,
-  Sparkles
+  TrendingDown
 } from 'lucide-react';
 
 interface DiurnalCurveSectionProps {
@@ -23,13 +16,11 @@ interface DiurnalCurveSectionProps {
   highestPeakWindow: string;
 }
 
-export const DiurnalCurveSection: React.FC<DiurnalCurveSectionProps> = ({
+export const DiurnalCurveSection: React.FC<DiurnalCurveSectionProps> = memo(({
   hourlyCurve,
   selectedHourIdx,
   onSelectHour,
-  scale,
-  cleanestWindow,
-  highestPeakWindow
+  scale
 }) => {
   const currentPoint = hourlyCurve[selectedHourIdx] || hourlyCurve[0];
   const meta = getAQIMeta(currentPoint.aqi, scale);
@@ -211,7 +202,6 @@ export const DiurnalCurveSection: React.FC<DiurnalCurveSectionProps> = ({
           {/* Interactive Clickable Nodes for each hour */}
           {points.map((pt) => {
             const isSelected = selectedHourIdx === pt.idx;
-            const isVent = pt.point.isSafeVentilationWindow;
             const nodeMeta = getAQIMeta(pt.point.aqi, scale);
 
             return (
@@ -349,4 +339,4 @@ export const DiurnalCurveSection: React.FC<DiurnalCurveSectionProps> = ({
       </div>
     </div>
   );
-};
+});

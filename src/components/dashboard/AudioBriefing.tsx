@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Volume2, VolumeX, Sparkles, Pause, Play, Radio } from 'lucide-react';
+import { Volume2, Pause, Play, Radio } from 'lucide-react';
 
-export const AudioBriefing: React.FC = () => {
+export const AudioBriefing: React.FC = memo(() => {
   const { airData, language } = useApp();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isSupported, setIsSupported] = useState<boolean>(true);
@@ -108,4 +108,4 @@ Have a healthy, protected day.`;
       </div>
     </div>
   );
-};
+});

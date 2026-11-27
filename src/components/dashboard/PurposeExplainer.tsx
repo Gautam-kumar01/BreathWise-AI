@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { 
   Wind, 
   HeartPulse, 
@@ -7,8 +7,7 @@ import {
   ChevronRight, 
   Sparkles, 
   CheckCircle2, 
-  X,
-  ArrowRight
+  X
 } from 'lucide-react';
 
 interface PurposeExplainerProps {
@@ -16,7 +15,7 @@ interface PurposeExplainerProps {
   onExploreIndoor: () => void;
 }
 
-export const PurposeExplainer: React.FC<PurposeExplainerProps> = ({ onExplorePlan, onExploreIndoor }) => {
+export const PurposeExplainer: React.FC<PurposeExplainerProps> = memo(({ onExplorePlan, onExploreIndoor }) => {
   const [isDismissed, setIsDismissed] = useState<boolean>(false);
 
   if (isDismissed) return null;
@@ -129,4 +128,4 @@ export const PurposeExplainer: React.FC<PurposeExplainerProps> = ({ onExplorePla
       </div>
     </div>
   );
-};
+});

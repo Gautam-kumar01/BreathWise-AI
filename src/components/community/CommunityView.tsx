@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Users, Share2, Check, Download, ShieldCheck, AlertTriangle, FileText } from 'lucide-react';
+import { Users, Share2, Check, Download } from 'lucide-react';
 
 export const CommunityView: React.FC = () => {
   const { airData, language } = useApp();
